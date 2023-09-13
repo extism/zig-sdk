@@ -7,9 +7,16 @@ on:
     branches: [ main ]
 
 jobs:
+  prepare:
+    name: Install Extism Runtime
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/libextism
   zig:
     name: Zig CI
     runs-on: ${{ matrix.os }}
+    needs: prepare
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]

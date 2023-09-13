@@ -47,5 +47,4 @@ jobs:
       - name: Test Zig Host SDK
         run: |
           zig version
-          cd zig
           LD_LIBRARY_PATH=/usr/local/lib zig build test

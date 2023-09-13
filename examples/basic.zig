@@ -23,7 +23,7 @@ pub fn main() !void {
     const allocator = gpa.allocator();
     _ = sdk.setLogFile("extism.log", .Debug);
 
-    const wasmfile_manifest = manifest.WasmFile{ .path = "../wasm/code-functions.wasm" };
+    const wasmfile_manifest = manifest.WasmFile{ .path = "wasm/code-functions.wasm" };
     const man = .{ .wasm = &[_]manifest.Wasm{.{ .wasm_file = wasmfile_manifest }} };
     var f = Function.init(
         "hello_world",

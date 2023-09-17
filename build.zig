@@ -13,13 +13,9 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const lib = b.addStaticLibrary(.{
-        .name = "extism",
-        .root_source_file = .{ .path = "src/main.zig" },
-        .target = target,
-        .optimize = optimize,
+    const extism_module = b.addModule("extism", .{
+        .source_file = .{ .path = "src/main.zig" },
     });
-    b.installArtifact(lib);
 
     var tests = b.addTest(.{
         .name = "Library Tests",
@@ -28,7 +24,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    tests.addAnonymousModule("extism", .{ .source_file = .{ .path = "src/main.zig" } });
+    tests.addModule("extism", extism_module);
     tests.linkLibC();
     tests.addIncludePath(.{ .path = "/usr/local/include" });
     tests.addLibraryPath(.{ .path = "/usr/local/lib" });
@@ -45,13 +41,13 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    example.addAnonymousModule("extism", .{ .source_file = .{ .path = "src/main.zig" } });
+    example.addModule("extism", extism_module);
     example.linkLibC();
     example.addIncludePath(.{ .path = "/usr/local/include" });
     example.addLibraryPath(.{ .path = "/usr/local/lib" });
     example.linkSystemLibrary("extism");
     const example_run_step = b.addRunArtifact(example);
 
-    const example_step = b.step("run_example", "Build basic_example");
+    const example_step = b.step("run_example", "Run the basic example");
     example_step.dependOn(&example_run_step.step);
 }

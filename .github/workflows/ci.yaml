@@ -7,16 +7,9 @@ on:
     branches: [ main ]
 
 jobs:
-  prepare:
-    name: Install Extism Runtime
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/libextism
   zig:
     name: Zig CI
     runs-on: ubuntu-latest
-    needs: prepare
     strategy:
       matrix:
         zig_version: ["master"] # eventually use multiple versions once stable
@@ -25,24 +18,11 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
-      - name: Download libextism.so
-        uses: actions/download-artifact@v2
-        with:
-          name: libextism-so-artifact
-      - name: Download libextism.h
-        uses: actions/download-artifact@v2
-        with:
-          name: libextism-h-artifact
-      - name: Move the files because download can't sudo
-        run: |
-          ls -lah ./
-          sudo mv libextism.so /usr/local/lib/
-          sudo mv extism.h /usr/local/include/
+      - uses: ./.github/actions/libextism
       - name: Setup Zig env
         uses: goto-bus-stop/setup-zig@v2
         with: 
           version: ${{ matrix.zig_version }}
-
       - name: Test Zig Host SDK
         run: |
           zig version

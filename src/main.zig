@@ -25,3 +25,5 @@ pub fn extismVersion() []const u8 {
     const version = std.mem.span(c_version);
     return version;
 }
+
+pub const PTR = c.I64;

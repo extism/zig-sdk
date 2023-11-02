@@ -27,8 +27,8 @@ pub fn main() !void {
     const man = .{ .wasm = &[_]manifest.Wasm{.{ .wasm_file = wasmfile_manifest }} };
     var f = Function.init(
         "hello_world",
-        &[_]sdk.c.ExtismValType{sdk.c.I64},
-        &[_]sdk.c.ExtismValType{sdk.c.I64},
+        &[_]sdk.c.ExtismValType{sdk.PTR},
+        &[_]sdk.c.ExtismValType{sdk.PTR},
         &hello_world,
         @constCast(@as(*const anyopaque, @ptrCast("user data"))),
     );

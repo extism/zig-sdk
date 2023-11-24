@@ -23,9 +23,24 @@ sudo extism lib install latest
 > **Note**: This library has breaking changes and targets 1.0 of the runtime. For the time being, install the runtime from our nightly development builds on git: `sudo extism lib install --version git`.
 
 # within your Zig project directory:
-mkdir -p libs
-cd libs
-git clone https://github.com/extism/extism.git
+This package works with the Zig package manager introduced in Zig 0.11. Create a `build.zig.zon` file like this:
+```zig
+.{
+    .name = "my-project",
+    .version = "0.1.0",
+    .paths = .{""},
+    .dependencies = .{
+        .extism = .{
+            .url = "https://github.com/extism/zig-sdk/archive/<git-ref-here>.tar.gz",
+        },
+    },
+}
+```
+And in your `build.zig`:
+```zig
+const extism_module = b.dependency("extism", .{ .target = target, .optimize = optimize }).module("extism");
+exe.addModule("extism", extism_module);
+```
 
 ## Getting Started
 
@@ -40,11 +55,13 @@ Since you may not have an Extism plug-in on hand to test, let's load a demo plug
 ```zig
 // First require the library
 const extism = @import("extism");
+const std = @import("std");
 
 const wasm_url = extism.manifest.WasmUrl{ .url = "https://github.com/extism/plugins/releases/latest/download/count_vowels.wasm" };
 const manifest = .{ .wasm = &[_]extism.manifest.Wasm{.{ .wasm_url= wasm_url }} };
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+defer std.debug.assert(gpa.deinit() == .ok);
 const allocator = gpa.allocator();
 
 var plugin = try extism.Plugin.initFromManifest(

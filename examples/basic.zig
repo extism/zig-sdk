@@ -1,5 +1,4 @@
 const std = @import("std");
-const testing = std.testing;
 const sdk = @import("extism");
 const Plugin = sdk.Plugin;
 const CurrentPlugin = sdk.CurrentPlugin;
@@ -15,11 +14,12 @@ export fn hello_world(plugin_ptr: ?*sdk.c.ExtismCurrentPlugin, inputs: [*c]const
     var curr_plugin = CurrentPlugin.getCurrentPlugin(plugin_ptr orelse unreachable);
     const input = curr_plugin.inputBytes(&input_slice[0]);
     std.debug.print("input: {s}\n", .{input});
-    output_slice[0] = input_slice[0];
+    curr_plugin.returnBytes(&output_slice[0], input);
 }
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer std.debug.assert(gpa.deinit() == .ok);
     const allocator = gpa.allocator();
     _ = sdk.setLogFile("extism.log", .Debug);
 

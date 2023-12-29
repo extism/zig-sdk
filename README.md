@@ -40,6 +40,12 @@ And in your `build.zig`:
 ```zig
 const extism_module = b.dependency("extism", .{ .target = target, .optimize = optimize }).module("extism");
 exe.addModule("extism", extism_module);
+// TODO: make this easier to install
+// add the shared library & header
+exe.linkLibC();
+exe.addIncludePath(.{ .path = "/usr/local/include" });
+exe.addLibraryPath(.{ .path = "/usr/local/lib" });
+exe.linkSystemLibrary("extism");
 ```
 
 ## Getting Started

@@ -147,36 +147,42 @@ We want to expose two functions to our plugin, `kv_write(key: String, value: Byt
 
 ```zig
 // pretend this is Redis or something
-const HashMap = std.StringHashMap([]const u8);
-var KV_STORE: HashMap = undefined;
+var KV_STORE: std.StringHashMap(u32) = undefined;
 
-export fn kv_read(plugin_ptr: ?*extism.c.ExtismCurrentPlugin, inputs: [*c]const extism.c.ExtismVal, n_inputs: u64, outputs: [*c]extism.c.ExtismVal, n_outputs: u64, user_data: ?*anyopaque) callconv(.C) void {
-
-    var curr_plugin = extism.CurrentPlugin.getCurrentPlugin(plugin_ptr orelse unreachable);
+export fn kv_read(caller: ?*extism.c.ExtismCurrentPlugin, inputs: [*c]const extism.c.ExtismVal, n_inputs: u64, outputs: [*c]extism.c.ExtismVal, n_outputs: u64, user_data: ?*anyopaque) callconv(.C) void {
+    _ = user_data;
+    var curr_plugin = extism.CurrentPlugin.getCurrentPlugin(caller orelse unreachable);
 
     // retrieve the key from the plugin
     var input_slice = inputs[0..n_inputs];
     const key = curr_plugin.inputBytes(&input_slice[0]);
 
+    var out = outputs[0..n_outputs];
     // Try to get the value from KV_STORE
-    const val = KV_STORE.get(key) orelse null;
-
-    // return the value to the plugin
-    var output_slice = outputs[0..n_outputs];
-    curr_plugin.returnBytes(&output_slice[0], val);
+    if (KV_STORE.get(key)) |val| {
+        // return the value to the plugin
+        var data: [4]u8 = undefined;
+        std.mem.writeInt(u32, &data, val, .little);
+        curr_plugin.returnBytes(&out[0], &data);
+    } else {
+        KV_STORE.put(key, 0) catch unreachable;
+        curr_plugin.returnBytes(&out[0], &[4]u8{ 0, 0, 0, 0 });
+    }
 }
 
-export fn kv_write(plugin_ptr: ?*extism.c.ExtismCurrentPlugin, inputs: [*c]const extism.c.ExtismVal, n_inputs: u64, outputs: [*c]extism.c.ExtismVal, n_outputs: u64, user_data: ?*anyopaque) callconv(.C) void {
-
-    var curr_plugin = extism.CurrentPlugin.getCurrentPlugin(plugin_ptr orelse unreachable);
+export fn kv_write(caller: ?*extism.c.ExtismCurrentPlugin, inputs: [*c]const extism.c.ExtismVal, n_inputs: u64, outputs: [*c]extism.c.ExtismVal, n_outputs: u64, user_data: ?*anyopaque) callconv(.C) void {
+    _ = user_data;
+    _ = outputs;
+    _ = n_outputs;
+    var curr_plugin = extism.CurrentPlugin.getCurrentPlugin(caller orelse unreachable);
 
     // retrieve key and value from the plugin
-    var input_slice = inputs[0..n_inputs];
-    const key = curr_plugin.inputBytes(&input_slice[0]);
-    const val = curr_plugin.inputBytes(&input_slice[1]);
+    var in = inputs[0..n_inputs];
+    const key = curr_plugin.inputBytes(&in[0]);
+    const val = curr_plugin.inputBytes(&in[1]);
 
     // write to the KV
-    _ = KV_STORE.put(key, val) catch unreachable;
+    KV_STORE.put(key, std.mem.readInt(u32, val[0..4], .little)) catch unreachable;
 }
 
 ```

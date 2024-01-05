@@ -39,7 +39,7 @@ This package works with the Zig package manager introduced in Zig 0.11. Create a
 And in your `build.zig`:
 ```zig
 const extism_module = b.dependency("extism", .{ .target = target, .optimize = optimize }).module("extism");
-exe.addModule("extism", extism_module);
+exe.root_module.addImport("extism", extism_module);
 // TODO: make this easier to install
 // add the shared library & header
 exe.linkLibC();

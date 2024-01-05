@@ -4,7 +4,7 @@ const builtin = @import("builtin");
 pub fn build(b: *std.Build) void {
     comptime {
         const current_zig = builtin.zig_version;
-        const min_zig = std.SemanticVersion.parse("0.12.0-dev.64+b835fd90c") catch unreachable; // std.json.ArrayHashMap
+        const min_zig = std.SemanticVersion.parse("0.12.0-dev.2030") catch unreachable; // build system changes: ziglang/zig#18160
         if (current_zig.order(min_zig) == .lt) {
             @compileError(std.fmt.comptimePrint("Your Zig version v{} does not meet the minimum build requirement of v{}", .{ current_zig, min_zig }));
         }
@@ -14,7 +14,7 @@ pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{});
 
     const extism_module = b.addModule("extism", .{
-        .source_file = .{ .path = "src/main.zig" },
+        .root_source_file = .{ .path = "src/main.zig" },
     });
 
     var tests = b.addTest(.{
@@ -24,7 +24,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    tests.addModule("extism", extism_module);
+    tests.root_module.addImport("extism", extism_module);
     tests.linkLibC();
     tests.addIncludePath(.{ .path = "/usr/local/include" });
     tests.addLibraryPath(.{ .path = "/usr/local/lib" });
@@ -41,7 +41,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    example.addModule("extism", extism_module);
+    example.root_module.addImport("extism", extism_module);
     example.linkLibC();
     example.addIncludePath(.{ .path = "/usr/local/include" });
     example.addLibraryPath(.{ .path = "/usr/local/lib" });

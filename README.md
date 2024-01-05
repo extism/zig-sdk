@@ -32,6 +32,7 @@ This package works with the Zig package manager introduced in Zig 0.11. Create a
     .dependencies = .{
         .extism = .{
             .url = "https://github.com/extism/zig-sdk/archive/<git-ref-here>.tar.gz",
+            // .hash = "" (zig build will tell you what to put here)
         },
     },
 }

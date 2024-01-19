@@ -4,8 +4,6 @@ This repo contains the Zig code for integrating with the [Extism](https://extism
 
 > **Note**: If you're unsure what Extism is or what an SDK is see our homepage: [https://extism.org](https://extism.org).
 
-> **Note**: This is an early 1.0 release and is unstable until we hit 1.0. If you are looking to integrate now consider looking at the 0.x version in the [extism/extism](https://github.com/extism/extism/tree/main/zig) repo.
-
 ## Installation
 
 ### Install the Extism Runtime Dependency
@@ -19,8 +17,6 @@ sudo extism lib install latest
 #=> Copying libextism.dylib to /usr/local/lib/libextism.dylib
 #=> Copying extism.h to /usr/local/include/extism.h
 ```
-
-> **Note**: This library has breaking changes and targets 1.0 of the runtime. For the time being, install the runtime from our nightly development builds on git: `sudo extism lib install --version git`.
 
 # within your Zig project directory:
 This package works with the Zig package manager introduced in Zig 0.11. Create a `build.zig.zon` file like this:
@@ -233,4 +229,3 @@ try plugin.call("count_vowels", "Hello, World!");
 try plugin.call("count_vowels", "Hello, World!");
 # => {"count": 3, "total": 6, "vowels": "aeiouAEIOU"}
 ```
-

@@ -19,20 +19,11 @@ sudo extism lib install latest
 ```
 
 # within your Zig project directory:
-This package works with the Zig package manager introduced in Zig 0.11. Create a `build.zig.zon` file like this:
-```zig
-.{
-    .name = "my-project",
-    .version = "0.1.0",
-    .paths = .{""},
-    .dependencies = .{
-        .extism = .{
-            .url = "https://github.com/extism/zig-sdk/archive/<git-ref-here>.tar.gz",
-            // .hash = "" (zig build will tell you what to put here)
-        },
-    },
-}
+
 ```
+zig fetch --save https://github.com/extism/zig-sdk/archive/<git-ref-here>.tar.gz
+```
+
 And in your `build.zig`:
 ```zig
 const extism_module = b.dependency("extism", .{ .target = target, .optimize = optimize }).module("extism");

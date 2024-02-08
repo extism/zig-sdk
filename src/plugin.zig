@@ -92,9 +92,3 @@ pub fn hasFunction(self: Self, function_name: []const u8) bool {
     const res = c.extism_plugin_function_exists(self.ptr, function_name.ptr);
     return res;
 }
-
-pub fn TypedPlugin(comptime functions: []type) type {
-    return struct {
-        functions: functions,
-    };
-}

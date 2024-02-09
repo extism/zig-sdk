@@ -31,7 +31,7 @@ pub const Wasm = union(enum) {
 
 pub const Manifest = struct {
     wasm: []const Wasm,
-    memory: ?struct { max_pages: ?u32 } = null,
+    memory: ?struct { max_pages: ?u32, max_http_response_bytes: ?u64 } = null,
     config: ?std.json.ArrayHashMap([]const u8) = null,
     allowed_hosts: ?[]const []const u8 = null,
     allowed_paths: ?std.json.ArrayHashMap([]const u8) = null,

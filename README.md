@@ -26,14 +26,11 @@ zig fetch --save https://github.com/extism/zig-sdk/archive/<git-ref-here>.tar.gz
 
 And in your `build.zig`:
 ```zig
-const extism_module = b.dependency("extism", .{ .target = target, .optimize = optimize }).module("extism");
-exe.root_module.addImport("extism", extism_module);
-// TODO: make this easier to install
-// add the shared library & header
-exe.linkLibC();
-exe.addIncludePath(.{ .path = "/usr/local/include" });
-exe.addLibraryPath(.{ .path = "/usr/local/lib" });
-exe.linkSystemLibrary("extism");
+// to use the build script util, import extism:
+const extism = @import("extism");
+
+// inside your `build` function, after you've created tests or an executable step:
+extism.addLibrary(exe, b);
 ```
 
 ## Getting Started

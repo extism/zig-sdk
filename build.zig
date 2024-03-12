@@ -51,3 +51,12 @@ pub fn build(b: *std.Build) void {
     const example_step = b.step("run_example", "Run the basic example");
     example_step.dependOn(&example_run_step.step);
 }
+
+pub fn addLibrary(to: *std.Build.Step.Compile, b: *std.Build) void {
+    to.root_module.addImport("extism", b.dependency("extism", .{}).module("extism"));
+    to.linkLibC();
+    // TODO: switch based on platform and use platform-specific paths here
+    to.addIncludePath(.{ .path = "/usr/local/include" });
+    to.addLibraryPath(.{ .path = "/usr/local/lib" });
+    to.linkSystemLibrary("extism");
+}

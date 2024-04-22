@@ -56,7 +56,17 @@ pub fn addLibrary(to: *std.Build.Step.Compile, b: *std.Build) void {
     to.root_module.addImport("extism", b.dependency("extism", .{}).module("extism"));
     to.linkLibC();
     // TODO: switch based on platform and use platform-specific paths here
-    to.addIncludePath(.{ .path = "/usr/local/include" });
-    to.addLibraryPath(.{ .path = "/usr/local/lib" });
+    const extism_include = std.posix.getenv("EXTISM_INCLUDE_PATH");
+    if (extism_include) |path| {
+        to.addIncludePath(.{ .path = path });
+    } else {
+        to.addIncludePath(.{ .path = "/usr/local/include" });
+    }
+    const extism_lib = std.posix.getenv("EXTISM_LIB_PATH");
+    if (extism_lib) |path| {
+        to.addLibraryPath(.{ .path = path });
+    } else {
+        to.addLibraryPath(.{ .path = "/usr/local/lib" });
+    }
     to.linkSystemLibrary("extism");
 }

@@ -183,8 +183,8 @@ defer KV_STORE.deinit();
 
 var f_read = extism.Function.init(
     "kv_read",
-    &[_]extism.c.ExtismValType{extism.c.I64},
-    &[_]extism.c.ExtismValType{extism.c.I64},
+    &[_]extism.c.ExtismValType{extism.PTR},
+    &[_]extism.c.ExtismValType{extism.PTR},
     &kv_read,
     @constCast(@as(*const anyopaque, @ptrCast("user data"))),
 );
@@ -192,7 +192,7 @@ defer f_read.deinit();
 
 var f_write = extism.Function.init(
     "kv_write",
-    &[_]extism.c.ExtismValType{extism.c.I64, extism.c.I64},
+    &[_]extism.c.ExtismValType{extism.PTR, extism.PTR},
     &[_]extism.c.ExtismValType{},
     &kv_write,
     @constCast(@as(*const anyopaque, @ptrCast("user data"))),

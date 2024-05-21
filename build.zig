@@ -1,6 +1,6 @@
 const std = @import("std");
 const builtin = @import("builtin");
-const LazyPath = std.Build.LazyPath;
+
 pub fn build(b: *std.Build) void {
     comptime {
         const current_zig = builtin.zig_version;

@@ -27,8 +27,8 @@ test "Single threaded tests" {
 
     var f = Function.init(
         "hello_world",
-        &[_]sdk.c.ExtismValType{sdk.c.I64},
-        &[_]sdk.c.ExtismValType{sdk.c.I64},
+        &[_]sdk.c.ExtismValType{sdk.c.ExtismValType_I64},
+        &[_]sdk.c.ExtismValType{sdk.c.ExtismValType_I64},
         &hello_world,
         @constCast(@as(*const anyopaque, @ptrCast("user data"))),
     );
@@ -76,8 +76,8 @@ test "Multi threaded tests" {
         fn _test() !void {
             var f = Function.init(
                 "hello_world",
-                &[_]sdk.c.ExtismValType{sdk.c.I64},
-                &[_]sdk.c.ExtismValType{sdk.c.I64},
+                &[_]sdk.c.ExtismValType{sdk.c.ExtismValType_I64},
+                &[_]sdk.c.ExtismValType{sdk.c.ExtismValType_I64},
                 &hello_world,
                 @constCast(@as(*const anyopaque, @ptrCast("user data"))),
             );
@@ -96,8 +96,8 @@ test "Multi threaded tests" {
 
     var f = Function.init(
         "hello_world",
-        &[_]sdk.c.ExtismValType{sdk.c.I64},
-        &[_]sdk.c.ExtismValType{sdk.c.I64},
+        &[_]sdk.c.ExtismValType{sdk.c.ExtismValType_I64},
+        &[_]sdk.c.ExtismValType{sdk.c.ExtismValType_I64},
         &hello_world,
         @constCast(@as(*const anyopaque, @ptrCast("user data"))),
     );
@@ -116,8 +116,8 @@ test "Plugin Cancellation" {
     _ = sdk.setLogFile("test.log", .Debug);
     var f = Function.init(
         "hello_world",
-        &[_]sdk.c.ExtismValType{sdk.c.I64},
-        &[_]sdk.c.ExtismValType{sdk.c.I64},
+        &[_]sdk.c.ExtismValType{sdk.c.ExtismValType_I64},
+        &[_]sdk.c.ExtismValType{sdk.c.ExtismValType_I64},
         &hello_world,
         @constCast(@as(*const anyopaque, @ptrCast("user data"))),
     );

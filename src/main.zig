@@ -26,4 +26,4 @@ pub fn extismVersion() []const u8 {
     return version;
 }
 
-pub const PTR = c.I64;
+pub const PTR = c.ExtismValType_I64;

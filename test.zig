@@ -128,7 +128,7 @@ test "Plugin Cancellation" {
     var handle = plugin.cancelHandle();
     const S = struct {
         fn _test(h: *sdk.CancelHandle) void {
-            std.os.nanosleep(1, 0);
+            std.time.sleep(1);
             _ = h.cancel();
         }
     };

@@ -58,9 +58,7 @@ pub fn cancelHandle(self: *Self) CancelHandle {
     return .{ .handle = ptr };
 }
 
-/// Call a function with the given input
-pub fn call(self: *Self, function_name: []const u8, input: []const u8) ![]const u8 {
-    const res = c.extism_plugin_call(self.ptr, function_name.ptr, input.ptr, @as(u64, input.len));
+fn handleCall(self: *Self, res: i32) ![]const u8 {
     if (res != 0) {
         const err_c = c.extism_plugin_error(self.ptr);
         const err = std.mem.span(err_c);
@@ -80,6 +78,19 @@ pub fn call(self: *Self, function_name: []const u8, input: []const u8) ![]const 
     }
     return "";
 }
+
+/// Call a function with the given input
+pub fn call(self: *Self, function_name: []const u8, input: []const u8) ![]const u8 {
+    const res = c.extism_plugin_call(self.ptr, function_name.ptr, input.ptr, @as(u64, input.len));
+    return self.handleCall(res);
+}
+
+/// Call a function with the given input and host context
+pub fn callWithContext(self: *Self, function_name: []const u8, input: []const u8, host_context: *anyopaque) ![]const u8 {
+    const res = c.extism_plugin_call_with_host_context(self.ptr, function_name.ptr, input.ptr, @as(u64, input.len), host_context);
+    return self.handleCall(res);
+}
+
 /// Set configuration values
 pub fn setConfig(self: *Self, allocator: std.mem.Allocator, config: std.json.ArrayHashMap([]const u8)) !void {
     const config_json = try std.json.stringifyAlloc(allocator, config, .{ .emit_null_optional_fields = false });

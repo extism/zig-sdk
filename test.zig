@@ -15,6 +15,10 @@ export fn hello_world(plugin_ptr: ?*sdk.c.ExtismCurrentPlugin, inputs: [*c]const
     var curr_plugin = CurrentPlugin.getCurrentPlugin(plugin_ptr orelse unreachable);
     const input = curr_plugin.inputBytes(&input_slice[0]);
     std.debug.print("input: {s}\n", .{input});
+    if (curr_plugin.hostContext()) |ctx_ptr| {
+        const ctx: *u64 = @alignCast(@ptrCast(ctx_ptr));
+        std.debug.print("Host context={}\n", .{ctx.*});
+    }
     output_slice[0] = input_slice[0];
 }
 
@@ -40,9 +44,12 @@ test "Single threaded tests" {
     std.debug.print("\nregister loaded plugin: {}\n", .{std.fmt.fmtDuration(wasm_start.read())});
     const repeat = 1182;
     const input = "aeiouAEIOU____________________________________&smtms_y?" ** repeat;
-    const data = try plugin.call("count_vowels", input);
+    var data = try plugin.call("count_vowels", input);
     try testing.expectEqualStrings("{\"count\": 11820}", data);
     std.debug.print("register plugin + function call: {}, sent input size: {} bytes\n", .{ std.fmt.fmtDuration(wasm_start.read()), input.len });
+    var ctx: u64 = 12345;
+    data = try plugin.callWithContext("count_vowels", input, @ptrCast(&ctx));
+    try testing.expectEqualStrings("{\"count\": 11820}", data);
     std.debug.print("--------------\n", .{});
     var i: usize = 0;
     var wasm_elapsed: u64 = 0;

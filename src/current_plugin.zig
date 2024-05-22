@@ -39,3 +39,7 @@ pub fn returnBytes(self: *Self, val: *c.ExtismVal, data: []const u8) void {
 pub fn inputBytes(self: *Self, val: *const c.ExtismVal) []const u8 {
     return self.getMemory(@intCast(val.v.i64));
 }
+
+pub fn hostContext(self: *Self) ?*anyopaque {
+    return c.extism_current_plugin_host_context(self.c_currplugin);
+}

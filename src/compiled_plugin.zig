@@ -30,7 +30,7 @@ pub fn init(allocator: std.mem.Allocator, data: []const u8, functions: []const F
 
     if (plugin == null) {
         // TODO: figure out what to do with this error
-        std.debug.print("extism_compiled_plugin_new: {s}", .{
+        std.debug.print("extism_compiled_plugin_new: {s}\n", .{
             errmsg,
         });
         c.extism_plugin_new_error_free(errmsg);

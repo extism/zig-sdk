@@ -56,7 +56,7 @@ pub fn initFromCompiled(compiled: *CompiledPlugin) !Self {
     const plugin = c.extism_plugin_new_from_compiled(compiled.ptr, &errmsg);
     if (plugin == null) {
         // TODO: figure out what to do with this error
-        std.debug.print("extism_plugin_new: {s}", .{
+        std.debug.print("extism_plugin_new: {s}\n", .{
             errmsg,
         });
         c.extism_plugin_new_error_free(errmsg);

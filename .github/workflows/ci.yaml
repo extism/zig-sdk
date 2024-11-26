@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        zig_version: ["master"] # eventually use multiple versions once stable
+        zig_version: ["0.13.0"] # eventually use multiple versions once stable
         rust:
           - stable
     steps:

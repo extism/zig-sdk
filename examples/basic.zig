@@ -2,6 +2,7 @@ const std = @import("std");
 const sdk = @import("extism");
 const Plugin = sdk.Plugin;
 const CurrentPlugin = sdk.CurrentPlugin;
+const CompiledPlugin = sdk.CompiledPlugin;
 const Function = sdk.Function;
 const manifest = sdk.manifest;
 
@@ -24,7 +25,7 @@ pub fn main() !void {
     _ = sdk.setLogFile("extism.log", .Debug);
 
     const wasmfile_manifest = manifest.WasmFile{ .path = "wasm/code-functions.wasm" };
-    const man = .{ .wasm = &[_]manifest.Wasm{.{ .wasm_file = wasmfile_manifest }} };
+    const man = manifest.Manifest{ .wasm = &[_]manifest.Wasm{.{ .wasm_file = wasmfile_manifest }} };
     var f = Function.init(
         "hello_world",
         &[_]sdk.c.ExtismValType{sdk.PTR},
@@ -33,7 +34,10 @@ pub fn main() !void {
         @constCast(@as(*const anyopaque, @ptrCast("user data"))),
     );
     defer f.deinit();
-    var my_plugin = try Plugin.initFromManifest(allocator, man, &[_]Function{f}, true);
+    var c = try CompiledPlugin.initFromManifest(allocator, man, &[_]Function{f}, true);
+    defer c.deinit();
+
+    var my_plugin = try Plugin.initFromCompiled(c);
     defer my_plugin.deinit();
 
     var config = std.json.ArrayHashMap([]const u8){};

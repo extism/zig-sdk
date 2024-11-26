@@ -3,6 +3,7 @@ const Manifest = @import("manifest.zig").Manifest;
 const Function = @import("function.zig");
 const CancelHandle = @import("cancel_handle.zig");
 const c = @import("ffi.zig");
+const CompiledPlugin = @import("compiled_plugin.zig");
 
 const Self = @This();
 
@@ -47,6 +48,21 @@ pub fn initFromManifest(allocator: std.mem.Allocator, manifest: Manifest, functi
     const json = try std.json.stringifyAlloc(allocator, manifest, .{ .emit_null_optional_fields = false });
     defer allocator.free(json);
     return init(allocator, json, functions, wasi);
+}
+
+/// Create a new plugin from a pre-compiled plugin
+pub fn initFromCompiled(compiled: *CompiledPlugin) !Self {
+    var errmsg: [*c]u8 = null;
+    const plugin = c.extism_plugin_new_from_compiled(compiled.ptr, &errmsg);
+    if (plugin == null) {
+        // TODO: figure out what to do with this error
+        std.debug.print("extism_plugin_new: {s}\n", .{
+            errmsg,
+        });
+        c.extism_plugin_new_error_free(errmsg);
+        return error.PluginLoadFailed;
+    }
+    return plugin;
 }
 
 pub fn deinit(self: *Self) void {

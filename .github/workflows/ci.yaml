@@ -9,7 +9,7 @@ on:
 jobs:
   zig:
     name: Zig CI
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, macos-latest]
     strategy:
       matrix:
         zig_version: ["0.13.0"] # eventually use multiple versions once stable

@@ -49,7 +49,7 @@ const extism = @import("extism");
 const std = @import("std");
 
 const wasm_url = extism.manifest.WasmUrl{ .url = "https://github.com/extism/plugins/releases/latest/download/count_vowels.wasm" };
-const manifest = .{ .wasm = &[_]extism.manifest.Wasm{.{ .wasm_url= wasm_url }} };
+const manifest = extism.manifest.Manifest{ .wasm = &[_]extism.manifest.Wasm{.{ .wasm_url= wasm_url }} };
 
 var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 defer std.debug.assert(gpa.deinit() == .ok);
@@ -121,7 +121,7 @@ Let's load the manifest like usual but load up this `count_vowels_kvstore` plug-
 
 ```zig
 const wasm_url = extism.manifest.WasmUrl{ .url = "https://github.com/extism/plugins/releases/latest/download/count_vowels_kvstore.wasm" };
-const manifest = .{ .wasm = &[_]extism.manifest.Wasm{.{ .wasm_url= wasm_url }} };
+const manifest = extism.manifest.Manifest{ .wasm = &[_]extism.manifest.Wasm{.{ .wasm_url= wasm_url }} };
 ```
 
 > *Note*: The source code for this is [here](https://github.com/extism/plugins/blob/main/count_vowels_kvstore/src/lib.rs) and is written in rust, but it could be written in any of our PDK languages.

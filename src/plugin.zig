@@ -17,12 +17,10 @@ pub fn init(allocator: std.mem.Allocator, data: []const u8, functions: []const F
     var plugin: ?*c.ExtismPlugin = null;
     var errmsg: [*c]u8 = null;
     if (functions.len > 0) {
-        var funcPtrs = try allocator.alloc(?*c.ExtismFunction, functions.len);
+        const funcPtrs = try allocator.alloc(?*const c.ExtismFunction, functions.len);
         defer allocator.free(funcPtrs);
-        var i: usize = 0;
-        for (functions) |function| {
+        for (functions, 0..) |function, i| {
             funcPtrs[i] = function.c_func;
-            i += 1;
         }
         plugin = c.extism_plugin_new(data.ptr, @as(u64, data.len), &funcPtrs[0], functions.len, wasi, &errmsg);
     } else {

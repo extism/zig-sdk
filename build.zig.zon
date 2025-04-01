@@ -1,6 +1,6 @@
 .{
     .name = .extism,
-    .version = "1.0.0-rc2",
+    .version = "1.0.0-rc3",
     .minimum_zig_version = "0.14.0",
     .fingerprint = 0xb41364f00afbe9db,
     .paths = .{""},

@@ -1,10 +1,10 @@
 name: Zig CI
-  
+
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   zig:
@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        zig_version: ["0.13.0"] # eventually use multiple versions once stable
+        zig_version: ["0.14.0"] # eventually use multiple versions once stable
         rust:
           - stable
     steps:
@@ -21,9 +21,9 @@ jobs:
       - uses: ./.github/actions/libextism
       - name: Setup Zig env
         uses: goto-bus-stop/setup-zig@v2
-        with: 
+        with:
           version: ${{ matrix.zig_version }}
       - name: Test Zig Host SDK
         run: |
           zig version
-          LD_LIBRARY_PATH=/usr/local/lib zig build test
+          zig build test

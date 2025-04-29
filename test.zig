@@ -23,7 +23,7 @@ export fn hello_world(plugin_ptr: ?*sdk.c.ExtismCurrentPlugin, inputs: [*c]const
 }
 
 const wasmfile_manifest = manifest.WasmFile{ .path = "wasm/code-functions.wasm" };
-const man = .{ .wasm = &[_]manifest.Wasm{.{ .wasm_file = wasmfile_manifest }} };
+const man = manifest.Manifest{ .wasm = &[_]manifest.Wasm{.{ .wasm_file = wasmfile_manifest }} };
 
 test "Single threaded tests" {
     var wasm_start = try std.time.Timer.start();
@@ -119,7 +119,7 @@ test "Multi threaded tests" {
 
 test "Plugin Cancellation" {
     const loop_manifest = manifest.WasmFile{ .path = "wasm/loop.wasm" };
-    const loop_man = .{ .wasm = &[_]manifest.Wasm{.{ .wasm_file = loop_manifest }} };
+    const loop_man = manifest.Manifest{ .wasm = &[_]manifest.Wasm{.{ .wasm_file = loop_manifest }} };
     _ = sdk.setLogFile("test.log", .Debug);
     var f = Function.init(
         "hello_world",
